@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Nav Demo 1',
+      title: 'Flutter Nav Demo 2',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),

@@ -16,6 +16,7 @@ class _AboutPageState extends State<AboutPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('About'),
+        backgroundColor: Colors.deepOrangeAccent,
       ),
       body: new Center(
         child: new RaisedButton(
