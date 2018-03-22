@@ -8,30 +8,23 @@ class MyFormPage extends StatefulWidget {
 }
 
 class _MyFormPageState extends State<MyFormPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
-  bool saving = false;
+  bool saved = false;
 
   void _submit() {
-    print('submit called...');
     final form = formKey.currentState;
     if (!form.validate()) {
       return;
     }
 
-    setState(() {
-      saving = true;
-    });
-
-    //Simulate a service call
-    print('submitting to backend...');
-    new Future.delayed(new Duration(seconds: 4), () {
-      Navigator.pop(context);
-    });
+    saved = true;
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        backgroundColor: Colors.black, content: new Text("Saved!")));
   }
 
   Future<bool> _canLeave(BuildContext context) {
-    final form = formKey.currentState;
-    if (form.validate()) {
+    if (saved) {
       return new Future<bool>.value(true);
     } else
       return _prompt(context);
@@ -42,7 +35,7 @@ class _MyFormPageState extends State<MyFormPage> {
           context: context,
           child: new AlertDialog(
             title: new Text('Warning - Incomplete form'),
-            content: new Text('Do you want to stay and complete form?'),
+            content: new Text('Do you want to stay and complete this form?'),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(true),
@@ -58,44 +51,32 @@ class _MyFormPageState extends State<MyFormPage> {
         false;
   }
 
-  List<Widget> _buildForm(BuildContext context) {
-    var l = new List<Widget>();
-    l.add(new Form(
-      key: formKey,
-      autovalidate: true,
-      child: new Column(
-        children: [
-          new TextFormField(
-              decoration: new InputDecoration(labelText: 'Enter something'),
-              validator: (val) =>
-                  val.isEmpty ? "You must enter something" : null),
-          new RaisedButton(
-            onPressed: _submit,
-            child: new Text('Save'),
-          ),
-        ],
-      ),
-      onWillPop: () => _canLeave(context),
-    ));
-
-    if (saving) {
-      l.add(const ModalBarrier(dismissible: false));
-      l.add(new Center(child: new CircularProgressIndicator()));
-    }
-    return l;
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: new Text('My Form'),
         backgroundColor: Colors.deepOrangeAccent,
       ),
       body: new Padding(
         padding: const EdgeInsets.all(16.0),
-        child: new Stack(
-          children: _buildForm(context),
+        child: new Form(
+          key: formKey,
+          autovalidate: true,
+          child: new Column(
+            children: [
+              new TextFormField(
+                  decoration: new InputDecoration(labelText: 'Enter something'),
+                  validator: (val) =>
+                      val.isEmpty ? "You must enter something" : null),
+              new RaisedButton(
+                onPressed: _submit,
+                child: new Text('Save'),
+              ),
+            ],
+          ),
+          onWillPop: () => _canLeave(context),
         ),
       ),
     );
