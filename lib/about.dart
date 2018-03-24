@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AboutPage extends StatefulWidget {
-
   @override
   _AboutPageState createState() => new _AboutPageState();
-}
-
-void _navHome(BuildContext context) {
-  Navigator.pop(context);
 }
 
 class _AboutPageState extends State<AboutPage> {
@@ -19,10 +14,7 @@ class _AboutPageState extends State<AboutPage> {
         backgroundColor: Colors.deepOrangeAccent,
       ),
       body: new Center(
-        child: new RaisedButton(
-          child: new Text('Back to Home Page'),
-          onPressed: () => _navHome(context),
-        ),
+        child: new Text("About Page", style: new TextStyle(fontSize: 35.0)),
       ),
     );
   }
